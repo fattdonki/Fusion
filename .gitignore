@@ -1,0 +1,27 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# C++ build files
+/build/
+out/
+*.o
+*.obj
+*.dll
+*.pdb
+*.exe
+
+# VSCode
+.vscode/
+.vs/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# OS
+.DS_Store
+Thumbs.db
