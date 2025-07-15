@@ -1,6 +1,7 @@
 from .backend_bindings import lib
 import ctypes
 from .matrix import Matrix
+import random
 
 class Vector:
     def __init__(self, data):
@@ -127,6 +128,35 @@ class Vector:
             data.append(round(value,3))
         return data
     
+    @staticmethod
+    def zero(size):
+        obj = lib.Vector_zero(size)
+        v = Vector.__new__(Vector)
+        v.obj = obj
+        v.size = size
+        v.data = [0.0] * size
+        return v    
+    
+    @staticmethod
+    def unit(size, axis=0):
+        if axis < 0 or axis >= size:
+            raise ValueError("Axis must be in the range [0, size-1].")
+        
+        obj = lib.Vector_unit(size, axis)
+        v = Vector.__new__(Vector)
+        v.obj = obj
+        v.size = size
+        v.data = v.__fill_data()
+        return v
+    
+    @staticmethod
+    def random(size, min_val=0.0, max_val=1.0):
+        if min_val >= max_val:
+            raise ValueError("min_val must be less than max_val.")
+        
+        data = [round(random.uniform(min_val, max_val), 2) for _ in range(size)]
+        return Vector(data)
+    
     def normalize(self):
         result_obj = lib.Vector_normalize(self.obj)
         result = Vector.__new__(Vector)
@@ -137,12 +167,3 @@ class Vector:
     
     def magnitude(self):
         return lib.Vector_magnitude(self.obj)
-    
-    @staticmethod
-    def zero(size):
-        obj = lib.Vector_zero(size)
-        v = Vector.__new__(Vector)
-        v.obj = obj
-        v.size = size
-        v.data = [0.0] * size
-        return v

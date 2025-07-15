@@ -1,7 +1,11 @@
 import ctypes
 import os
 
-dll_path = r"C:\Users\arthu\source\repos\Fusion++\FusionBackend\out\build\x64-debug\FusionBackend.dll"
+__here = os.path.dirname(os.path.abspath(__file__))
+
+dll_path = os.path.abspath(
+    os.path.join(__here, "..", "FusionBackend", "out", "build", "x64-debug", "FusionBackend.dll")
+)
 lib = ctypes.CDLL(dll_path)
 
 ##################################
@@ -127,6 +131,9 @@ lib.Vector_find.restype = ctypes.c_double
 
 lib.Vector_zero.argtypes = [ctypes.c_int]
 lib.Vector_zero.restype = ctypes.c_void_p
+
+lib.Vector_unit.argtypes = [ctypes.c_int, ctypes.c_int]
+lib.Vector_unit.restype = ctypes.c_void_p
 
 lib.Vector_mul.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 lib.Vector_mul.restype = ctypes.c_double

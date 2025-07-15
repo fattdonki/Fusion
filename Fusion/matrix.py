@@ -1,6 +1,7 @@
 from .backend_bindings import lib
 import ctypes
 import math
+import random
 
 class Matrix:
     def __init__(self, data):
@@ -129,7 +130,9 @@ class Matrix:
     
     @staticmethod
     def random(rows, cols, min_val=0, max_val=1):
-        import random
+        if min_val >= max_val:
+            raise ValueError("min_val must be less than max_val.")
+
         data = [[round(random.uniform(min_val, max_val), 2) for _ in range(cols)] for _ in range(rows)]
         return Matrix(data)
     
