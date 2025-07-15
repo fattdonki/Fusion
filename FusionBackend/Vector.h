@@ -106,7 +106,6 @@ public:
         return std::sqrt(result);
     }
 
-private:
     int size_;
     std::vector<double> data_;
 
@@ -225,4 +224,9 @@ extern "C" {
         return new Vector(size);
     }
 
+    __declspec(dllexport) void* Vector_unit(int size, int axis) {
+        Vector* v = new Vector(size);
+        v->set(axis, 1);
+        return v;
+    }
 }
