@@ -11,6 +11,9 @@ out/
 *.dll
 *.pdb
 *.exe
+*.exp
+*.lib
+*.pyd
 
 # VSCode
 .vscode/
@@ -21,7 +24,11 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+CMakePresets.json
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Deprecated 
+FusionBackend [deprecated]/

@@ -5,6 +5,8 @@ import random
 
 class Vector:
     def __init__(self, data):
+        if not data or not isinstance(data, list):
+            raise ValueError("Data must be a non-empty list.")
         self.data = data
         self.size = len(data)
         arr = (ctypes.c_double * self.size)(*data)

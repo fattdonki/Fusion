@@ -4,7 +4,7 @@ import os
 __here = os.path.dirname(os.path.abspath(__file__))
 
 dll_path = os.path.abspath(
-    os.path.join(__here, "..", "FusionBackend", "out", "build", "x64-debug", "FusionBackend.dll")
+    os.path.join(__here, "..", "FusionBackend", "FusionBackend.dll")
 )
 lib = ctypes.CDLL(dll_path)
 
@@ -22,19 +22,16 @@ factorial = lib.factorial
 factorial.argtypes = [ctypes.c_int]
 factorial.restype = ctypes.c_int
 
-get_std_vector_element = lib.get_std_vector_element
-get_std_vector_element.argtypes = [ctypes.c_void_p, ctypes.c_int]
-get_std_vector_element.restype = ctypes.c_double
+lib.get_std_vector_element.argtypes = [ctypes.c_void_p, ctypes.c_int]
+lib.get_std_vector_element.restype = ctypes.c_double
 
-get_std_vector_item = lib.get_std_vector_item
-get_std_vector_item.argtypes = [ctypes.c_void_p, ctypes.c_int]
-get_std_vector_item.restype = ctypes.c_void_p
+lib.get_std_vector_item.argtypes = [ctypes.c_void_p, ctypes.c_int]
+lib.get_std_vector_item.restype = ctypes.c_void_p
 
 lib.get_vector_count = lib.get_vector_count
 lib.get_vector_count.argtypes = [ctypes.c_void_p]
 lib.get_vector_count.restype = ctypes.c_int
 
-lib.get_vector_length = lib.get_vector_length
 lib.get_vector_length.argtypes = [ctypes.c_void_p, ctypes.c_int]
 lib.get_vector_length.restype = ctypes.c_int
 
@@ -48,6 +45,8 @@ lib.Matrix_delete.restype = None
 
 lib.Matrix_find.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int]
 lib.Matrix_find.restype = ctypes.c_double
+
+lib.Matrix_set_flat.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 
 lib.Matrix_identity.argtypes = [ctypes.c_int]
 lib.Matrix_identity.restype = ctypes.c_void_p
@@ -161,6 +160,23 @@ lib.Vector_normalize.restype = ctypes.c_void_p
 
 lib.Vector_magnitude.argtypes = [ctypes.c_void_p]
 lib.Vector_magnitude.restype = ctypes.c_double
+
+##################################
+
+lib.Tensor_create.argtypes = [ctypes.POINTER(ctypes.c_int), ctypes.c_int, ctypes.POINTER(ctypes.c_double)]
+lib.Tensor_create.restype = ctypes.c_void_p
+
+lib.Tensor_delete.argtypes = [ctypes.c_void_p]
+lib.Tensor_delete.restype = None
+
+lib.Tensor_empty.argtypes = [ctypes.POINTER(ctypes.c_int), ctypes.c_int]
+lib.Tensor_empty.restype = ctypes.c_void_p
+
+lib.Tensor_find.argtypes = [ctypes.c_void_p, ctypes.c_int]
+lib.Tensor_find.restype = ctypes.c_double
+
+lib.Tensor_mul.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+lib.Tensor_mul.restype = ctypes.c_void_p
 
 ##################################
 

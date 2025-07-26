@@ -2,27 +2,41 @@ from .backend_bindings import lib
 import ctypes
 import math
 import random
+import array
 
 class Matrix:
     def __init__(self, data):
+        if __debug__:
+            if not all(isinstance(row, list) for row in data):
+                raise ValueError("Data must be a non-empty list of lists.")
         self.data = data
         self.rows = len(data)
         self.cols = len(data[0])
-        flat = [v for row in data for v in row]
-        arr = (ctypes.c_double * len(flat))(*flat)
+        flat = array.array('d', (v for row in data for v in row))
+        arr = (ctypes.c_double * len(flat)).from_buffer(flat)
         self.obj = lib.Matrix_create(self.rows, self.cols, arr)
-
+        
     def __del__(self):
         if hasattr(self, "obj"):
             lib.Matrix_delete(self.obj)
 
     def __getitem__(self, index):
-        if (index < 0 or index >= self.rows):
-            raise IndexError("Row index out of bounds.")
+        if isinstance(index, int):
+            if (index < 0 or index >= self.rows):
+                raise IndexError("Row index out of bounds.")
 
-        return self.data[index]
+            return self.data[index]
+        
+        elif isinstance(index, tuple):
+            if len(index) != 2:
+                raise IndexError("Index must be a tuple of (row, column).")
+            row, col = index
+            if row < 0 or row >= self.rows or col < 0 or col >= self.cols:
+                raise IndexError("Row or column index out of bounds.")
+            return self.data[row][col]
 
     def __str__(self):
+        self.data = self.__fill_data()
         result = "[\n"
         for row in range(self.rows):
             for value in range(self.cols):
@@ -48,7 +62,6 @@ class Matrix:
             result.obj = result_obj
             result.rows = self.rows
             result.cols = other.cols
-            result.data = result.__fill_data()
             return result
         
         elif isinstance(other, (int, float)):
@@ -57,7 +70,6 @@ class Matrix:
             result.obj = result_obj
             result.rows = self.rows
             result.cols = self.cols
-            result.data = result.__fill_data()
             return result
         
         
@@ -70,7 +82,6 @@ class Matrix:
             result.obj = result_obj
             result.rows = self.rows
             result.cols = self.cols
-            result.data = result.__fill_data()
             return result
 
         return NotImplemented    
@@ -84,7 +95,6 @@ class Matrix:
         result.obj = result_obj
         result.rows = self.rows
         result.cols = self.cols
-        result.data = result.__fill_data()
         return result
     
     def __sub__(self, other):
@@ -96,7 +106,6 @@ class Matrix:
         result.obj = result_obj
         result.rows = self.rows
         result.cols = self.cols
-        result.data = result.__fill_data()
         return result
     
     def __eq__(self, other):
@@ -178,13 +187,11 @@ class Matrix:
         Q.obj = lib.MatrixPair_A(obj)
         Q.rows = self.rows
         Q.cols = self.cols
-        Q.data = Q.__fill_data()
 
         R = Matrix.__new__(Matrix)
         R.obj = lib.MatrixPair_B(obj)
         R.rows = self.rows
         R.cols = self.cols
-        R.data = R.__fill_data()
         return Q, R
     
     def LUD(self):
@@ -194,13 +201,11 @@ class Matrix:
         L.obj = lib.MatrixPair_A(obj)
         L.rows = self.rows
         L.cols = self.cols
-        L.data = L.__fill_data()
 
         U = Matrix.__new__(Matrix)
         U.obj = lib.MatrixPair_B(obj)
         U.rows = self.rows
         U.cols = self.cols
-        U.data = U.__fill_data()
         return L, U
     
     def SVD(self):
@@ -210,19 +215,16 @@ class Matrix:
         U.obj = lib.MatrixTriple_A(obj)
         U.rows = self.rows
         U.cols = self.cols
-        U.data = U.__fill_data()
 
         S = Matrix.__new__(Matrix)
         S.obj = lib.MatrixTriple_B(obj)
         S.rows = self.rows
         S.cols = self.cols
-        S.data = S.__fill_data()
 
         V = Matrix.__new__(Matrix)
         V.obj = lib.MatrixTriple_C(obj)
         V.rows = self.rows
         V.cols = self.cols
-        V.data = V.__fill_data()
         
         return U, S, V
     
@@ -261,7 +263,6 @@ class Matrix:
         result.obj = obj
         result.rows = self.rows
         result.cols = self.cols
-        result.data = result.__fill_data()
         return result
     
     def determinant(self):
