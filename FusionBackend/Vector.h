@@ -8,7 +8,7 @@ extern PyTypeObject PyVectorType;
 struct Vector {
 public:
 
-    /*_______________________________Defenition_______________________________*/
+    /*_______________________________Definition_______________________________*/
 
     Vector(int size, const double* values = nullptr)
         : size_(size), data_(std::vector<double>(size, 0.0)) {

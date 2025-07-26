@@ -13,7 +13,7 @@ extern PyTypeObject PyTensorType;
 
 struct Tensor {
 
-    /*_______________________________Defenition_______________________________*/
+    /*_______________________________Definition_______________________________*/
 
     Tensor(const std::vector<int>& shape, const double* values = nullptr)
         : shape_(shape), total_size_(1)

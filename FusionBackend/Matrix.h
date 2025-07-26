@@ -32,7 +32,7 @@ extern PyTypeObject PyMatrixType;
 
 struct Matrix {
 
-    /*_______________________________Defenition_______________________________*/
+    /*_______________________________Definition_______________________________*/
 
     Matrix(int rows, int cols, const double* values = nullptr)
         : rows_(rows), cols_(cols)
